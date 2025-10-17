@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Tanks/Tanks.vcxproj
+/Tanks/Tanks.vcxproj.filters
+/Tanks/Tanks.vcxproj.user
+/Tanks/x64/Debug
+/Tanks/.vs/Tanks
+/Tanks/Tanks/x64/Debug
