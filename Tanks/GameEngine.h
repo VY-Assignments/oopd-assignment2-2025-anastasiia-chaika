@@ -19,5 +19,4 @@ private:
 	std::unique_ptr<BotTank> bot_tank;
 	std::unique_ptr<UserTank> user_tank;
 
-	bool is_cell_availbale(int row, int col);
 };

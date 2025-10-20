@@ -32,6 +32,10 @@ void Field::set_us_col(int new_col) {
 	us_col = new_col;
 }
 
+void Field::set_us_direction(Direction direction) {
+	us_dir = direction;
+}
+
 std::vector<std::vector<char>> Field::init_field() {
 	std::vector<std::vector<char>> field_grid(this->rows, std::vector<char>(this->cols, ' '));
 
@@ -39,7 +43,20 @@ std::vector<std::vector<char>> Field::init_field() {
 	int number_of_obstacles = static_cast<int>(coeficient * totalCells);
 
 	field_grid[bot_row][bot_col] = 'B';
-	field_grid[us_row][us_col] = 'T';
+	switch (us_dir) {
+	case UP:
+		field_grid[us_row][us_col] = '^';
+		break;
+	case DOWN:
+		field_grid[us_row][us_col] = 'v';
+		break;
+	case RIGHT:
+		field_grid[us_row][us_col] = '>';
+		break;
+	case LEFT:
+		field_grid[us_row][us_col] = '<';
+		break;
+	}
 
 	std::mt19937 rng(time(nullptr));
 	std::uniform_int_distribution<int> dist_rows(0, rows - 1);
@@ -70,11 +87,10 @@ void Field::display_field() const {
 }
 
 
-//fix checking!
 void Field::clear_tanks_positions() {
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {
-			if (field_grid[i][j] == 'B' || field_grid[i][j] == 'T' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>') {
+			if (field_grid[i][j] == 'B' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>') {
 				field_grid[i][j] = ' ';
 			}
 		}
@@ -84,7 +100,24 @@ void Field::clear_tanks_positions() {
 void Field::update_field() {
 	clear_tanks_positions();
 	
+	switch (us_dir) {
+	case UP:
+		field_grid[us_row][us_col] = '^';
+		break;
+	case DOWN:
+		field_grid[us_row][us_col] = 'v';
+		break;
+	case RIGHT:
+		field_grid[us_row][us_col] = '>';
+		break;
+	case LEFT:
+		field_grid[us_row][us_col] = '<';
+		break;
+	}
 	field_grid[bot_row][bot_col] = 'B';
-	field_grid[us_row][us_col] = 'T';
+}
 
+bool Field::cell_is_free(int r, int c) const {
+	if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
+	return !(field_grid[r][c] == '#' || field_grid[r][c] == 'B' || field_grid[r][c] == '^' || field_grid[r][c] == '>' || field_grid[r][c] == 'v' || field_grid[r][c] == '<');
 }

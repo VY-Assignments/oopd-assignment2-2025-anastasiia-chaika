@@ -3,14 +3,14 @@
 #include <iostream>
 
 GameEngine::GameEngine() {
-	this->field = std::make_unique<Field>();
-	this->bot_tank = std::make_unique<BotTank>();
-	this->user_tank = std::make_unique<UserTank>();
+	field = std::make_unique<Field>();
+	bot_tank = std::make_unique<BotTank>();
+	user_tank = std::make_unique<UserTank>();
 }
 
 const void GameEngine::display_field() {
 	system("cls");
-	this->field->display_field();
+	field->display_field();
 }
 
 void GameEngine::move(Direction direction) {			//if cell available and outside the board
@@ -20,25 +20,30 @@ void GameEngine::move(Direction direction) {			//if cell available and outside t
 			int col = user_tank->get_col_pos();
 			switch (direction) {
 			case UP:
+				if (!field->cell_is_free(row - 1, col)) return;
 				user_tank->set_row(row - 1);
 				break;
 			case DOWN:
+				if (!field->cell_is_free(row + 1, col)) return;
 				user_tank->set_row(row + 1);
 				break;
 			case LEFT:
+				if (!field->cell_is_free(row, col - 1)) return;
 				user_tank->set_col(col - 1);
 				break;
 			case RIGHT:
+				if (!field->cell_is_free(row, col + 1)) return;
 				user_tank->set_col(col + 1);
 				break;
 			}
-
-			field->set_us_row(user_tank->get_row_pos());
-			field->set_us_col(user_tank->get_col_pos());
 		}
 		else {
 			user_tank->set_direction(direction);
 		}
+
+		field->set_us_row(user_tank->get_row_pos());
+		field->set_us_col(user_tank->get_col_pos());
+		field->set_us_direction(user_tank->get_direction());
 	}
 
 }
