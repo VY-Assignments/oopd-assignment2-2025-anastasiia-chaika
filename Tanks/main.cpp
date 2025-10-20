@@ -1,12 +1,26 @@
 #include "GameEngine.h"
 #include "Direction.h"
 #include <conio.h>
+#include <thread>
+#include <chrono>
+#include <windows.h>
 
 int main() {
+	
+	//temporary solution to hide cursor while not using sfml
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(consoleHandle, &cursorInfo);
+	cursorInfo.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
+
 	GameEngine ge;
 	ge.display_field();
 
 	while (true) {
+		ge.update_field();
+		ge.display_field();
+
 		if (_kbhit()) {
 			int key = _getch();
 
@@ -40,9 +54,8 @@ int main() {
 				ge.shoot();
 			}
 
-			ge.update_field();
-			ge.display_field();
 		}
+
 	}
 
 	return 0;

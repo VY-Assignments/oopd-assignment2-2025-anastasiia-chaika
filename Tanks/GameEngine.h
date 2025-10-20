@@ -14,6 +14,7 @@ public:
 	void move(Direction direction);
 	void shoot();
 	void update_field();
+	void move_bot_tank();
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;

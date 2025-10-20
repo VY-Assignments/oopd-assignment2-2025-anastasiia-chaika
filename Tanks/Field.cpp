@@ -32,8 +32,20 @@ void Field::set_us_col(int new_col) {
 	us_col = new_col;
 }
 
+void Field::set_bot_row(int new_row) {
+	bot_row = new_row;
+}
+
+void Field::set_bot_col(int new_col) {
+	bot_col = new_col;
+}
+
 void Field::set_us_direction(Direction direction) {
 	us_dir = direction;
+}
+
+void Field::set_bot_direction(Direction direction) {
+	bot_dir = direction;
 }
 
 std::vector<std::vector<char>> Field::init_field() {

@@ -16,7 +16,11 @@ public:
 
 	void set_us_row(int new_row);
 	void set_us_col(int new_col);
+	void set_bot_row(int new_row);
+	void set_bot_col(int new_col);
+
 	void set_us_direction(Direction direction);
+	void set_bot_direction(Direction direction);
 
 	bool cell_is_free(int r, int c) const;
 private:
@@ -29,6 +33,7 @@ private:
 	int us_col = 18;
 
 	Direction us_dir = Direction::UP;
+	Direction bot_dir = Direction::DOWN;
 
 	double coeficient = 0.03;
 	std::vector<std::vector<char>> field_grid;

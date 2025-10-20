@@ -13,7 +13,41 @@ const void GameEngine::display_field() {
 	field->display_field();
 }
 
-void GameEngine::move(Direction direction) {			//if cell available and outside the board
+void GameEngine::move_bot_tank() {
+	Direction direction = bot_tank->get_direction();
+	if (direction != Direction::NODIRECTION) {
+		int row = bot_tank->get_row_pos();
+		int col = bot_tank->get_col_pos();
+		switch (direction) {
+		case UP:
+			if (!field->cell_is_free(row - 1, col)) {
+				bot_tank->set_direction(LEFT);
+			}
+			bot_tank->update();
+			break;
+		case DOWN:
+			if (!field->cell_is_free(row + 1, col)) {
+				bot_tank->set_direction(RIGHT);
+			}
+			bot_tank->update();
+			break;
+		case LEFT:
+			if (!field->cell_is_free(row, col - 1)) {
+				bot_tank->set_direction(DOWN);
+			}
+			bot_tank->update();
+			break;
+		case RIGHT:
+			if (!field->cell_is_free(row, col + 1)) {
+				bot_tank->set_direction(UP);
+			}
+			bot_tank->update();
+			break;
+		}
+	}
+}
+
+void GameEngine::move(Direction direction) {
 	if (direction != Direction::NODIRECTION) {
 		if (user_tank->get_direction() == direction) {
 			int row = user_tank->get_row_pos();
@@ -53,5 +87,10 @@ void GameEngine::shoot() {
 }
 
 void GameEngine::update_field() {
-	this->field->update_field();
+	move_bot_tank();
+	field->set_bot_row(bot_tank->get_row_pos());
+	field->set_bot_col(bot_tank->get_col_pos());
+	field->set_bot_direction(bot_tank->get_direction());
+
+	field->update_field();
 }
