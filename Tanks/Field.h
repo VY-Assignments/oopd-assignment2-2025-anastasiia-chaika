@@ -24,7 +24,7 @@ public:
 
 	bool cell_is_free(int r, int c) const;
 private:
-	int cols = 20;
+	int cols = 40;
 	int rows = 20;
 
 	int bot_row = 1;

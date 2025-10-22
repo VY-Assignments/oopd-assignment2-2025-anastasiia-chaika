@@ -4,4 +4,5 @@
 class UserTank : public Tank {
 public:
 	UserTank();
+	void move() override;
 };

@@ -46,7 +46,7 @@ int main() {
 					break;
 				}
 				if (d != Direction::NODIRECTION) {
-					ge.move(d);
+					ge.move_user_tank(d);
 				}
 			}
 

@@ -4,5 +4,6 @@
 class Projectile : public Object {
 private:
 	int speed;
-	//напрямок
+public:
+	void move() override {};
 };

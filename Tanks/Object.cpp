@@ -24,3 +24,21 @@ void Object::set_col(int new_col) {
 void Object::set_direction(Direction direction) {
 	d = direction;
 }
+
+void Object::update_coordinates() {
+	switch (d) {
+	case UP:
+		row_pos--;
+		break;
+	case DOWN:
+		row_pos++;
+		break;
+	case RIGHT:
+		col_pos++;
+		break;
+	case LEFT:
+		col_pos--;
+		break;
+	}
+
+}

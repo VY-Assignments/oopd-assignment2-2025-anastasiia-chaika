@@ -9,28 +9,10 @@ BotTank::BotTank() : Tank (){
 	last_move_time = std::chrono::steady_clock::now();
 }
 
-void BotTank::update() {
+void BotTank::move() {
 	auto now = std::chrono::steady_clock::now();
 	if (now - last_move_time >= move_interval) {
-		bot_move();
+		update_coordinates();
 		last_move_time = now;
 	}
-}
-
-void BotTank::bot_move() {
-	switch (d) {
-	case UP:
-		row_pos--;
-		break;
-	case DOWN:
-		row_pos++;
-		break;
-	case RIGHT:
-		col_pos++;
-		break;
-	case LEFT:
-		col_pos--;
-		break;
-	}
-
 }

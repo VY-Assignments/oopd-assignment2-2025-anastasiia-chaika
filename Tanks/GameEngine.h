@@ -11,7 +11,7 @@ class GameEngine {
 public:
 	GameEngine();
 	const void display_field();
-	void move(Direction direction);
+	void move_user_tank(Direction direction);
 	void shoot();
 	void update_field();
 	void move_bot_tank();

@@ -5,3 +5,7 @@ UserTank::UserTank() : Tank() {
 	this->col_pos = 18;
 	this->d = Direction::UP;
 }
+
+void UserTank::move() {
+	update_coordinates();
+}

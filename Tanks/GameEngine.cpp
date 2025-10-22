@@ -23,31 +23,31 @@ void GameEngine::move_bot_tank() {
 			if (!field->cell_is_free(row - 1, col)) {
 				bot_tank->set_direction(LEFT);
 			}
-			bot_tank->update();
+			bot_tank->move();
 			break;
 		case DOWN:
 			if (!field->cell_is_free(row + 1, col)) {
 				bot_tank->set_direction(RIGHT);
 			}
-			bot_tank->update();
+			bot_tank->move();
 			break;
 		case LEFT:
 			if (!field->cell_is_free(row, col - 1)) {
 				bot_tank->set_direction(DOWN);
 			}
-			bot_tank->update();
+			bot_tank->move();
 			break;
 		case RIGHT:
 			if (!field->cell_is_free(row, col + 1)) {
 				bot_tank->set_direction(UP);
 			}
-			bot_tank->update();
+			bot_tank->move();
 			break;
 		}
 	}
 }
 
-void GameEngine::move(Direction direction) {
+void GameEngine::move_user_tank(Direction direction) {
 	if (direction != Direction::NODIRECTION) {
 		if (user_tank->get_direction() == direction) {
 			int row = user_tank->get_row_pos();
@@ -55,19 +55,19 @@ void GameEngine::move(Direction direction) {
 			switch (direction) {
 			case UP:
 				if (!field->cell_is_free(row - 1, col)) return;
-				user_tank->set_row(row - 1);
+				user_tank->move();
 				break;
 			case DOWN:
 				if (!field->cell_is_free(row + 1, col)) return;
-				user_tank->set_row(row + 1);
+				user_tank->move();
 				break;
 			case LEFT:
 				if (!field->cell_is_free(row, col - 1)) return;
-				user_tank->set_col(col - 1);
+				user_tank->move();
 				break;
 			case RIGHT:
 				if (!field->cell_is_free(row, col + 1)) return;
-				user_tank->set_col(col + 1);
+				user_tank->move();
 				break;
 			}
 		}
