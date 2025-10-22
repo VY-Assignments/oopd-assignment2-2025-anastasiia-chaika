@@ -51,7 +51,7 @@ int main() {
 			}
 
 			else if (key == 32) {
-				ge.shoot();
+				ge.user_shoot();
 			}
 
 		}

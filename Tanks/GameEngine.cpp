@@ -1,6 +1,8 @@
 #include "GameEngine.h"
+#include "Projectile.h"
 #include <vector>
 #include <iostream>
+#include <memory>
 
 GameEngine::GameEngine() {
 	field = std::make_unique<Field>();
@@ -82,8 +84,8 @@ void GameEngine::move_user_tank(Direction direction) {
 
 }
 
-void GameEngine::shoot() {
-
+void GameEngine::user_shoot() {
+	projectiles.push_back(user_tank->shoot());
 }
 
 void GameEngine::update_field() {
@@ -92,5 +94,24 @@ void GameEngine::update_field() {
 	field->set_bot_col(bot_tank->get_col_pos());
 	field->set_bot_direction(bot_tank->get_direction());
 
-	field->update_field();
+	for (const auto& p : projectiles) {
+		p->move();
+	}
+
+	clear_unneeded_projectiles();
+
+	field->update_field(projectiles);
+
+}
+
+void GameEngine::clear_unneeded_projectiles() {
+	for (size_t i = 0; i < projectiles.size();) {
+		int r = projectiles[i]->get_row_pos();
+		int c = projectiles[i]->get_col_pos();
+
+		if (!field->cell_is_free(r, c)) {
+			projectiles.erase(projectiles.begin() + i);
+		}
+		else i++;
+	}
 }

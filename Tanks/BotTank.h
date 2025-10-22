@@ -1,6 +1,7 @@
 #pragma once
 #include "Tank.h"
 #include "Direction.h"
+#include "Projectile.h"
 #include <chrono>
 
 class BotTank : public Tank{

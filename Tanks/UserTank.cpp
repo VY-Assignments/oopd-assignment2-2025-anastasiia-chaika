@@ -1,4 +1,6 @@
 #include "UserTank.h"
+#include "Projectile.h"
+#include <memory>
 
 UserTank::UserTank() : Tank() {
 	this->row_pos = 18;

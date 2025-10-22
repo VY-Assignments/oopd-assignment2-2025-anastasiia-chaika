@@ -1,13 +1,15 @@
 #pragma once
 #include <vector>
 #include "Direction.h"
+#include "Projectile.h"
+#include <memory>
 
 class Field {
 public:
 	Field();
 	void display_field() const;
 	std::vector<std::vector<char>> init_field();
-	void update_field();
+	void update_field(const std::vector<std::unique_ptr<Projectile>>& projectiles);
 
 	int get_bot_row() const;
 	int get_bot_col() const;
@@ -37,5 +39,5 @@ private:
 
 	double coeficient = 0.03;
 	std::vector<std::vector<char>> field_grid;
-	void clear_tanks_positions();
+	void clear_objects_positions();
 };

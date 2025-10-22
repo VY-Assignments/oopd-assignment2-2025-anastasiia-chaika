@@ -1,7 +1,10 @@
 #include "Field.h"
+#include "Projectile.h"
 #include <random>
 #include <ctime>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 Field::Field() {
 	field_grid = init_field();
@@ -99,18 +102,18 @@ void Field::display_field() const {
 }
 
 
-void Field::clear_tanks_positions() {
+void Field::clear_objects_positions() {
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {
-			if (field_grid[i][j] == 'B' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>') {
+			if (field_grid[i][j] == 'B' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>' || field_grid[i][j] == '*') {
 				field_grid[i][j] = ' ';
 			}
 		}
 	}
 }
 
-void Field::update_field() {
-	clear_tanks_positions();
+void Field::update_field(const std::vector<std::unique_ptr<Projectile>>& projectiles) {
+	clear_objects_positions();
 	
 	switch (us_dir) {
 	case UP:
@@ -127,6 +130,10 @@ void Field::update_field() {
 		break;
 	}
 	field_grid[bot_row][bot_col] = 'B';
+
+	for (const auto& p : projectiles) {
+		field_grid[p->get_row_pos()][p->get_col_pos()] = '*';
+	}
 }
 
 bool Field::cell_is_free(int r, int c) const {
