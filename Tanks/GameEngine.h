@@ -16,6 +16,7 @@ public:
 	void user_shoot();
 	void update_field();
 	void move_bot_tank();
+	bool isGameOver();
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;

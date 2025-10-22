@@ -51,6 +51,14 @@ void Field::set_bot_direction(Direction direction) {
 	bot_dir = direction;
 }
 
+void Field::set_bot_hp(int hp) {
+	bot_hp = hp;
+}
+
+void Field::set_us_hp(int hp) {
+	user_hp = hp;
+}
+
 std::vector<std::vector<char>> Field::init_field() {
 	std::vector<std::vector<char>> field_grid(this->rows, std::vector<char>(this->cols, ' '));
 
@@ -93,6 +101,9 @@ std::vector<std::vector<char>> Field::init_field() {
 }
 
 void Field::display_field() const {
+	std::cout << "User HP: " << user_hp << std::endl;
+	std::cout << "Bot  HP: " << bot_hp << std::endl;
+
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {
 			std::cout << field_grid[i][j];
@@ -100,7 +111,6 @@ void Field::display_field() const {
 		std::cout << '\n';
 	}
 }
-
 
 void Field::clear_objects_positions() {
 	for (int i = 0;i < rows;i++) {

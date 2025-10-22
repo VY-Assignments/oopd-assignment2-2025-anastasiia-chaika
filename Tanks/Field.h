@@ -24,6 +24,9 @@ public:
 	void set_us_direction(Direction direction);
 	void set_bot_direction(Direction direction);
 
+	void set_bot_hp(int h);
+	void set_us_hp(int h);
+
 	bool cell_is_free(int r, int c) const;
 private:
 	int cols = 40;
@@ -36,6 +39,9 @@ private:
 
 	Direction us_dir = Direction::UP;
 	Direction bot_dir = Direction::DOWN;
+
+	int user_hp = 100;
+	int bot_hp = 100;
 
 	double coeficient = 0.03;
 	std::vector<std::vector<char>> field_grid;

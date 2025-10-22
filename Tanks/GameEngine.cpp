@@ -101,7 +101,8 @@ void GameEngine::update_field() {
 	clear_unneeded_projectiles();
 
 	field->update_field(projectiles);
-
+	field->set_bot_hp(bot_tank->get_hp());
+	field->set_us_hp(user_tank->get_hp());
 }
 
 void GameEngine::clear_unneeded_projectiles() {
@@ -109,9 +110,33 @@ void GameEngine::clear_unneeded_projectiles() {
 		int r = projectiles[i]->get_row_pos();
 		int c = projectiles[i]->get_col_pos();
 
-		if (!field->cell_is_free(r, c)) {
+		bool hit = false;
+
+		if (field->get_bot_row() == r && field->get_bot_col() == c) {
+			bot_tank->lower_hp();
+			hit = true;
+		}
+
+		else if (field->get_us_row() == r && field->get_us_col() == c) {
+			user_tank->lower_hp();
+			hit = true;
+		}
+
+		if (hit || !field->cell_is_free(r, c)) {
 			projectiles.erase(projectiles.begin() + i);
 		}
 		else i++;
 	}
+}
+
+bool GameEngine::isGameOver() {
+	if (user_tank->get_hp() <= 0) {
+		std::cout << "Game over!" << std::endl;
+		return true;
+	}
+	else if (bot_tank->get_hp() <= 0) {
+		std::cout << "Victory!" << std::endl;
+		return true;
+	}
+	else return false;
 }

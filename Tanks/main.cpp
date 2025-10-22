@@ -18,6 +18,7 @@ int main() {
 	ge.display_field();
 
 	while (true) {
+		if (ge.isGameOver()) return 0;
 		ge.update_field();
 		ge.display_field();
 

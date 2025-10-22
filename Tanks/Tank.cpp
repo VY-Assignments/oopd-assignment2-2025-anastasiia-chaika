@@ -31,5 +31,9 @@ std::unique_ptr<Projectile> Tank::shoot() {
 }
 
 int Tank::get_hp() {
-	return this->hp;
+	return hp;
+}
+
+void Tank::lower_hp() {
+	hp = hp-20;
 }
