@@ -1,13 +1,66 @@
 #include "GameEngine.h"
 #include "Projectile.h"
+#include "Direction.h"
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <conio.h>
+#include <chrono>
 
 GameEngine::GameEngine() {
 	field = std::make_unique<Field>();
 	bot_tank = std::make_unique<BotTank>();
 	user_tank = std::make_unique<UserTank>();
+}
+
+int GameEngine::run() {
+	display_field();
+	while (true) {
+
+		update_field();
+		display_field();
+		bot_shoot();
+
+		if (isGameOver()) {
+			return 0;
+		}
+
+		else if (_kbhit()) {
+			int key = _getch();
+
+			if (key == 27) {
+				break;
+			}
+
+			else if (key == 224) {
+				int key_direction = _getch();
+				Direction d = Direction::NODIRECTION;
+				switch (key_direction) {
+				case 72:							//up
+					d = Direction::UP;
+					break;
+				case 80:							//down
+					d = Direction::DOWN;
+					break;
+				case 75:							//left
+					d = Direction::LEFT;
+					break;
+				case 77:							//right
+					d = Direction::RIGHT;
+					break;
+				}
+				if (d != Direction::NODIRECTION) {
+					move_user_tank(d);
+				}
+			}
+
+			else if (key == 32) {
+				user_shoot();
+			}
+		}
+	}
+
+	return 0;
 }
 
 const void GameEngine::display_field() {
@@ -86,6 +139,48 @@ void GameEngine::move_user_tank(Direction direction) {
 
 void GameEngine::user_shoot() {
 	projectiles.push_back(user_tank->shoot());
+}
+
+bool GameEngine::bot_shoot() {
+	Direction direcction = bot_tank->get_direction();
+	int user_r = user_tank->get_row_pos();
+	int user_c = user_tank->get_col_pos();
+
+	int bot_r = bot_tank->get_row_pos();
+	int bot_c = bot_tank->get_col_pos();
+
+	switch (direcction) {
+	case UP:
+		if (user_r < bot_r && user_c == bot_c) {
+			auto pr = bot_tank->bot_shoot();
+			if (pr) projectiles.push_back(std::move(pr));
+		}
+		return true;
+		break;
+	case DOWN:
+		if (user_r > bot_r && user_c == bot_c) {
+			auto pr = bot_tank->bot_shoot();
+			if (pr) projectiles.push_back(std::move(pr));
+		}
+		return true;
+		break;
+	case LEFT:
+		if (user_c < bot_c && user_r == bot_r) {
+			auto pr = bot_tank->bot_shoot();
+			if (pr) projectiles.push_back(std::move(pr));
+		}
+		return true;
+		break;
+	case RIGHT:
+		if (user_c > bot_c && user_r == bot_r) {
+			auto pr = bot_tank->bot_shoot();
+			if (pr) projectiles.push_back(std::move(pr));
+		}
+		return true;
+		break;
+	}
+
+	return false;
 }
 
 void GameEngine::update_field() {

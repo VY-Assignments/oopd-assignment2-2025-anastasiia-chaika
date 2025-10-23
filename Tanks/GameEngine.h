@@ -11,12 +11,7 @@
 class GameEngine {
 public:
 	GameEngine();
-	const void display_field();
-	void move_user_tank(Direction direction);
-	void user_shoot();
-	void update_field();
-	void move_bot_tank();
-	bool isGameOver();
+	int run();
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;
@@ -25,4 +20,11 @@ private:
 	std::vector<std::unique_ptr<Projectile>> projectiles;
 	void clear_unneeded_projectiles();
 
+	const void display_field();
+	void move_user_tank(Direction direction);
+	void user_shoot();
+	bool bot_shoot();
+	void update_field();
+	void move_bot_tank();
+	bool isGameOver();
 };
