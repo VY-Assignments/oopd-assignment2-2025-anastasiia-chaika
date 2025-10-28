@@ -7,10 +7,37 @@
 #include <conio.h>
 #include <chrono>
 
+class GameEngine : public IGameEngine {
+public:
+	GameEngine();
+	int run() override;
+private:
+	std::unique_ptr<Field> field;
+	std::unique_ptr<BotTank> bot_tank;
+	std::unique_ptr<UserTank> user_tank;
+
+	std::vector<std::unique_ptr<Projectile>> projectiles;
+	void clear_unneeded_projectiles();
+
+	void display_field() const;
+	void move_user_tank(Direction direction);
+	void user_shoot();
+	bool bot_shoot();
+	void update_field();
+	void move_bot_tank();
+	bool isGameOver();
+
+	Keys return_key(int k);
+};
+
 GameEngine::GameEngine() {
 	field = std::make_unique<Field>();
 	bot_tank = std::make_unique<BotTank>();
 	user_tank = std::make_unique<UserTank>();
+}
+
+std::shared_ptr<IGameEngine> IGameEngine::create_game_engine() {
+	return std::make_shared<GameEngine>();
 }
 
 int GameEngine::run() {
@@ -26,26 +53,28 @@ int GameEngine::run() {
 		}
 
 		else if (_kbhit()) {
-			int key = _getch();
+			int key_num = _getch();
+			int key = return_key(key_num);
 
-			if (key == 27) {
+			if (key == Keys::ESC) {
 				break;
 			}
 
-			else if (key == 224) {
-				int key_direction = _getch();
+			else if (key == Keys::ARROW) {
+				int key_dir_num = _getch();
+				int key_direction = return_key(key_dir_num);
 				Direction d = Direction::NODIRECTION;
 				switch (key_direction) {
-				case 72:							//up
+				case Keys::AR_UP:
 					d = Direction::UP;
 					break;
-				case 80:							//down
+				case Keys::AR_DOWN:
 					d = Direction::DOWN;
 					break;
-				case 75:							//left
+				case Keys::AR_LEFT:
 					d = Direction::LEFT;
 					break;
-				case 77:							//right
+				case Keys::AR_RIGHT:
 					d = Direction::RIGHT;
 					break;
 				}
@@ -54,7 +83,7 @@ int GameEngine::run() {
 				}
 			}
 
-			else if (key == 32) {
+			else if (key == Keys::SPACE) {
 				user_shoot();
 			}
 		}
@@ -63,7 +92,7 @@ int GameEngine::run() {
 	return 0;
 }
 
-const void GameEngine::display_field() {
+void GameEngine::display_field() const {
 	system("cls");
 	field->display_field();
 }
@@ -234,4 +263,24 @@ bool GameEngine::isGameOver() {
 		return true;
 	}
 	else return false;
+}
+
+Keys GameEngine::return_key(int k) {
+	switch (k) {
+	case 27:
+		return Keys::ESC;
+		break;
+	case 224: 
+		return Keys::ARROW;
+	case 72:
+		return Keys::AR_UP;
+	case 80:
+		return Keys::AR_DOWN;
+	case 75:
+		return Keys::AR_LEFT;
+	case 77:
+		return Keys::AR_RIGHT;
+	case 32:
+		return Keys::SPACE;
+	}
 }

@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "Direction.h"
 #include <windows.h>
+#include <memory>
 
 int main() {
 	
@@ -11,8 +12,9 @@ int main() {
 	cursorInfo.bVisible = FALSE;
 	SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 
-	GameEngine ge;
-	ge.run();
+	std::shared_ptr<IGameEngine> ge = IGameEngine::create_game_engine();
+	ge->run();
+
 
 	return 0;
 }
