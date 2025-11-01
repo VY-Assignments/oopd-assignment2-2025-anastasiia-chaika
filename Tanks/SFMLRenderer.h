@@ -13,4 +13,17 @@ private:
 	sf::RenderWindow window;
 	void render();
 	std::unique_ptr<IGameEngine> eng;
+
+	sf::Texture userTexture;
+	sf::Texture botTexture;
+	sf::Texture projectileTexture;
+	sf::Texture wallTexture;
+	sf::Texture backgrTexture;
+	sf::Sprite backgrSprite;
+
+	int cellSize;
+	int rows;
+	int cols;
+
+	sf::Font font;
 };

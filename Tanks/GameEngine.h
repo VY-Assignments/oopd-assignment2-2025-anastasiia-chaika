@@ -18,4 +18,7 @@ public:
 	virtual bool bot_shoot()=0;
 	virtual void update_field()=0;
 
+	virtual int get_user_hp()=0;
+	virtual int get_bot_hp()=0;
+
 };

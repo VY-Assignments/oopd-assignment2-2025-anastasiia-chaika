@@ -65,7 +65,21 @@ std::vector<std::vector<char>> Field::init_field() {
 	int totalCells = rows * cols;
 	int number_of_obstacles = static_cast<int>(coeficient * totalCells);
 
-	field_grid[bot_row][bot_col] = 'B';
+	switch (bot_dir) {
+	case UP:
+		field_grid[bot_row][bot_col] = 'B';
+		break;
+	case DOWN:
+		field_grid[bot_row][bot_col] = 'D';
+		break;
+	case RIGHT:
+		field_grid[bot_row][bot_col] = 'b';
+		break;
+	case LEFT:
+		field_grid[bot_row][bot_col] = 'd';
+		break;
+	}
+
 	switch (us_dir) {
 	case UP:
 		field_grid[us_row][us_col] = '^';
@@ -115,7 +129,7 @@ void Field::display_field() const {
 void Field::clear_objects_positions() {
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {
-			if (field_grid[i][j] == 'B' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>' || field_grid[i][j] == '*') {
+			if (field_grid[i][j] == 'B' || field_grid[i][j] == 'D' || field_grid[i][j] == 'd' || field_grid[i][j] == 'b' || field_grid[i][j] == '^' || field_grid[i][j] == 'v' || field_grid[i][j] == '<' || field_grid[i][j] == '>' || field_grid[i][j] == '*') {
 				field_grid[i][j] = ' ';
 			}
 		}
@@ -139,7 +153,21 @@ void Field::update_field(const std::vector<std::unique_ptr<Projectile>>& project
 		field_grid[us_row][us_col] = '<';
 		break;
 	}
-	field_grid[bot_row][bot_col] = 'B';
+
+	switch (bot_dir) {
+	case UP:
+		field_grid[bot_row][bot_col] = 'B';
+		break;
+	case DOWN:
+		field_grid[bot_row][bot_col] = 'D';
+		break;
+	case RIGHT:
+		field_grid[bot_row][bot_col] = 'b';
+		break;
+	case LEFT:
+		field_grid[bot_row][bot_col] = 'd';
+		break;
+	}
 
 	for (const auto& p : projectiles) {
 		field_grid[p->get_row_pos()][p->get_col_pos()] = '*';
@@ -148,7 +176,7 @@ void Field::update_field(const std::vector<std::unique_ptr<Projectile>>& project
 
 bool Field::cell_is_free(int r, int c) const {
 	if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
-	return !(field_grid[r][c] == '#' || field_grid[r][c] == 'B' || field_grid[r][c] == '^' || field_grid[r][c] == '>' || field_grid[r][c] == 'v' || field_grid[r][c] == '<');
+	return !(field_grid[r][c] == 'D' || field_grid[r][c] == 'd' || field_grid[r][c] == 'b' || field_grid[r][c] == '#' || field_grid[r][c] == 'B' || field_grid[r][c] == '^' || field_grid[r][c] == '>' || field_grid[r][c] == 'v' || field_grid[r][c] == '<');
 }
 
 const std::vector<std::vector<char>>& Field::get_field() const{

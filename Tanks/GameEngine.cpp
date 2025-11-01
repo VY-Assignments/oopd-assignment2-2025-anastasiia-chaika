@@ -24,6 +24,9 @@ public:
 	void user_shoot() override;
 	bool bot_shoot() override;
 	void update_field() override;
+
+	int get_user_hp() override;
+	int get_bot_hp() override;
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;
@@ -294,4 +297,12 @@ Keys GameEngine::return_key(int k) {
 
 const std::vector<std::vector<char>>& GameEngine::get_field() const {
 	return field->get_field();
+}
+
+int GameEngine::get_user_hp() {
+	return user_tank->get_hp();
+}
+
+int GameEngine::get_bot_hp() {
+	return bot_tank->get_hp();
 }
