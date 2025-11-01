@@ -1,19 +1,21 @@
 #pragma once
+#include <memory>
 #include <vector>
-#include <string>
-#include "Field.h"
 #include "Direction.h"
-#include "BotTank.h"
-#include "UserTank.h"
-#include "Projectile.h"
-#include "Keys.h"
 
 class IGameEngine {
 public:
-	IGameEngine() = default;
 	virtual ~IGameEngine() = default;
-	virtual int run() = 0;
+	virtual void render() =0;
 
-	static std::shared_ptr<IGameEngine> create_game_engine();
+	static std::unique_ptr<IGameEngine> create_game_engine();
+
+	virtual bool isGameOver()=0;
+	virtual const std::vector<std::vector<char>>& get_field() const=0;
+
+	virtual void move_user_tank(Direction direction)=0;
+	virtual void user_shoot()=0;
+	virtual bool bot_shoot()=0;
+	virtual void update_field()=0;
 
 };

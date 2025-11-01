@@ -6,11 +6,24 @@
 #include <memory>
 #include <conio.h>
 #include <chrono>
+#include <string>
+#include "Field.h"
+#include "BotTank.h"
+#include "UserTank.h"
+#include "Keys.h"
 
 class GameEngine : public IGameEngine {
 public:
 	GameEngine();
-	int run() override;
+	void render() override;
+
+	bool isGameOver() override;
+	const std::vector<std::vector<char>>& get_field() const;
+
+	void move_user_tank(Direction direction) override;
+	void user_shoot() override;
+	bool bot_shoot() override;
+	void update_field() override;
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;
@@ -20,12 +33,7 @@ private:
 	void clear_unneeded_projectiles();
 
 	void display_field() const;
-	void move_user_tank(Direction direction);
-	void user_shoot();
-	bool bot_shoot();
-	void update_field();
 	void move_bot_tank();
-	bool isGameOver();
 
 	Keys return_key(int k);
 };
@@ -34,13 +42,14 @@ GameEngine::GameEngine() {
 	field = std::make_unique<Field>();
 	bot_tank = std::make_unique<BotTank>();
 	user_tank = std::make_unique<UserTank>();
+
 }
 
-std::shared_ptr<IGameEngine> IGameEngine::create_game_engine() {
-	return std::make_shared<GameEngine>();
+std::unique_ptr<IGameEngine> IGameEngine::create_game_engine() {
+	return std::make_unique<GameEngine>();
 }
 
-int GameEngine::run() {
+void GameEngine::render() {
 	display_field();
 	while (true) {
 
@@ -49,7 +58,7 @@ int GameEngine::run() {
 		bot_shoot();
 
 		if (isGameOver()) {
-			return 0;
+			return;
 		}
 
 		else if (_kbhit()) {
@@ -88,8 +97,6 @@ int GameEngine::run() {
 			}
 		}
 	}
-
-	return 0;
 }
 
 void GameEngine::display_field() const {
@@ -283,4 +290,8 @@ Keys GameEngine::return_key(int k) {
 	case 32:
 		return Keys::SPACE;
 	}
+}
+
+const std::vector<std::vector<char>>& GameEngine::get_field() const {
+	return field->get_field();
 }

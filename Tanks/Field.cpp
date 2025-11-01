@@ -150,3 +150,7 @@ bool Field::cell_is_free(int r, int c) const {
 	if (r < 0 || r >= rows || c < 0 || c >= cols) return false;
 	return !(field_grid[r][c] == '#' || field_grid[r][c] == 'B' || field_grid[r][c] == '^' || field_grid[r][c] == '>' || field_grid[r][c] == 'v' || field_grid[r][c] == '<');
 }
+
+const std::vector<std::vector<char>>& Field::get_field() const{
+	return field_grid;
+}

@@ -10,6 +10,7 @@ public:
 	void display_field() const;
 	std::vector<std::vector<char>> init_field();
 	void update_field(const std::vector<std::unique_ptr<Projectile>>& projectiles);
+	const std::vector<std::vector<char>>& get_field() const;
 
 	int get_bot_row() const;
 	int get_bot_col() const;
