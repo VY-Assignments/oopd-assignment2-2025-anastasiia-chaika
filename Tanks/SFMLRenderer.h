@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "IRenderer.h"
-#include"Field.h"
 #include "GameEngine.h"
 #include <memory>
 #include <string>
@@ -22,6 +21,8 @@ private:
 	sf::Texture wallTexture;
 	sf::Texture backgrTexture;
 	sf::Sprite backgrSprite;
+	sf::Texture botShotTexture;
+	sf::Texture userShotTexture;
 
 	int cellSize;
 	int rows;

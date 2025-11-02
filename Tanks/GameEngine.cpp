@@ -27,6 +27,9 @@ public:
 
 	int get_user_hp() override;
 	int get_bot_hp() override;
+
+	bool user_is_shot() override;
+	bool bot_is_shot() override;
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;
@@ -249,11 +252,15 @@ void GameEngine::clear_unneeded_projectiles() {
 
 		if (field->get_bot_row() == r && field->get_bot_col() == c) {
 			bot_tank->lower_hp();
+			bot_tank->set_condition(true);
+			bot_tank->shoot_time = std::chrono::steady_clock::now();
 			hit = true;
 		}
 
 		else if (field->get_us_row() == r && field->get_us_col() == c) {
 			user_tank->lower_hp();
+			user_tank->set_condition(true);
+			user_tank->shoot_time = std::chrono::steady_clock::now();
 			hit = true;
 		}
 
@@ -306,4 +313,26 @@ int GameEngine::get_user_hp() {
 
 int GameEngine::get_bot_hp() {
 	return bot_tank->get_hp();
+}
+
+bool GameEngine::user_is_shot() {
+	if (user_tank->get_is_shoot()) {
+		auto now = std::chrono::steady_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - user_tank->shoot_time).count();
+
+		if (duration < 1) return true;
+		else user_tank->set_condition(false);
+	}
+	return false;
+}
+
+bool GameEngine::bot_is_shot() {
+	if (bot_tank->get_is_shoot()) {
+		auto now = std::chrono::steady_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - bot_tank->shoot_time).count();
+
+		if (duration < 1) return true;
+		else bot_tank->set_condition(false);
+	}
+	return false;
 }

@@ -37,3 +37,11 @@ int Tank::get_hp() {
 void Tank::lower_hp() {
 	hp = hp-20;
 }
+
+bool Tank::get_is_shoot() {
+	return is_shot;
+}
+
+void Tank::set_condition(bool c) {
+	is_shot = c;
+}

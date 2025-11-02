@@ -12,6 +12,8 @@ SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> engine) {
 	window.create(sf::VideoMode(cols*cellSize, rows*cellSize), "Tanks");
 	window.setFramerateLimit(60);
 
+	botShotTexture.loadFromFile("img/bot_shot.png");
+	userShotTexture.loadFromFile("img/user_shot.png");
 	userTexture.loadFromFile("img/user.png");
 	botTexture.loadFromFile("img/bot.png");
 	projectileTexture.loadFromFile("img/projectile.png");
@@ -117,16 +119,60 @@ void SFMLRenderer::render() {
 				sprite.setTexture(wallTexture);
 				break;
 			case '^':
+				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+				else {
+					sprite.setTexture(userTexture);
+				}
+				sprite.setRotation(180);
+				break;
 			case '>': 
+				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+				else {
+					sprite.setTexture(userTexture);
+				}
+				sprite.setRotation(270);
+				break;
 			case 'v': 
+				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+				else {
+					sprite.setTexture(userTexture);
+				}
+				sprite.setRotation(0);
+				break;
 			case '<':
-				sprite.setTexture(userTexture);
+				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+				else {
+					sprite.setTexture(userTexture);
+				}
+				sprite.setRotation(90);
 				break;
 			case 'B':
+				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+				else {
+					sprite.setTexture(botTexture);
+				}
+				sprite.setRotation(180);
+				break;
 			case 'D':
+				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+				else {
+					sprite.setTexture(botTexture);
+				}
+				sprite.setRotation(0);
+				break;
 			case 'b':
+				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+				else {
+					sprite.setTexture(botTexture);
+				}
+				sprite.setRotation(270);
+				break;
 			case 'd':
-				sprite.setTexture(botTexture);
+				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+				else {
+					sprite.setTexture(botTexture);
+				}
+				sprite.setRotation(90);
 				break;
 			case '*':
 				sprite.setTexture(projectileTexture);
@@ -142,15 +188,6 @@ void SFMLRenderer::render() {
 
 			sprite.setPosition(j * cellSize + cellSize / 2.f, i * cellSize + cellSize / 2.f);
 
-			if (cellType == '^') sprite.setRotation(180);
-			else if (cellType == '>') sprite.setRotation(270);
-			else if (cellType == 'v') sprite.setRotation(0);
-			else if (cellType == '<') sprite.setRotation(90);
-
-			if (cellType == 'B') sprite.setRotation(180);
-			else if (cellType == 'b') sprite.setRotation(270);
-			else if (cellType == 'D') sprite.setRotation(0);
-			else if (cellType == 'd') sprite.setRotation(90);
 
 			window.draw(sprite);
 		}

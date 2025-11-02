@@ -22,4 +22,7 @@ public:
 	virtual int get_user_hp()=0;
 	virtual int get_bot_hp()=0;
 
+	virtual bool user_is_shot() = 0;
+	virtual bool bot_is_shot() = 0;
+
 };
