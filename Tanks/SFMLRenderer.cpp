@@ -32,7 +32,8 @@ void SFMLRenderer::mainLoop() {
 		render();
 		eng->bot_shoot();
 
-		if (eng->isGameOver()) {
+		if (eng->isGameOver() != "") {
+			render_game_finished(eng->isGameOver());
 			return;
 		}
 		sf::Event event;
@@ -69,7 +70,36 @@ void SFMLRenderer::mainLoop() {
 	}
 }
 
+void SFMLRenderer::render_game_finished(std::string message) {
+	while (window.isOpen()) {
 
+		window.clear();
+		window.draw(backgrSprite);
+
+		sf::Text msg;
+		msg.setFont(font);
+		msg.setCharacterSize(50);
+		msg.setFillColor(sf::Color::White);
+		msg.setString(message);
+
+		sf::FloatRect textBounds = msg.getLocalBounds();
+		float posX = (cols * cellSize) / 2.0f - textBounds.width / 2.0f;
+		float posY = (rows * cellSize) / 2.0f - textBounds.height / 2.0f;
+		msg.setPosition(posX, posY);
+
+		window.draw(msg);
+		window.display();
+
+		sf::Event event;
+		while (window.pollEvent(event)) {
+
+			if (event.type == sf::Event::Closed) {
+				window.close();
+				break;
+			}
+		}
+	}
+}
 
 void SFMLRenderer::render() {
 	window.clear();

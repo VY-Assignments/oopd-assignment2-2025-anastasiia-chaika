@@ -4,6 +4,7 @@
 #include"Field.h"
 #include "GameEngine.h"
 #include <memory>
+#include <string>
 
 class SFMLRenderer : public IRenderer{
 public:
@@ -12,6 +13,7 @@ public:
 private:
 	sf::RenderWindow window;
 	void render();
+	void render_game_finished(std::string msg);
 	std::unique_ptr<IGameEngine> eng;
 
 	sf::Texture userTexture;

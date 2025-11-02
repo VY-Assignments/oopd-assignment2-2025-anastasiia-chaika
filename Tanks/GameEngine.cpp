@@ -17,7 +17,7 @@ public:
 	GameEngine();
 	void render() override;
 
-	bool isGameOver() override;
+	std::string isGameOver() override;
 	const std::vector<std::vector<char>>& get_field() const;
 
 	void move_user_tank(Direction direction) override;
@@ -60,7 +60,8 @@ void GameEngine::render() {
 		display_field();
 		bot_shoot();
 
-		if (isGameOver()) {
+		if (isGameOver() != "") {
+			std::cout << isGameOver() << std::endl;
 			return;
 		}
 
@@ -263,16 +264,16 @@ void GameEngine::clear_unneeded_projectiles() {
 	}
 }
 
-bool GameEngine::isGameOver() {
+std::string GameEngine::isGameOver() {
+	std::string game_finished_msg = "";
 	if (user_tank->get_hp() <= 0) {
-		std::cout << "Game over!" << std::endl;
-		return true;
+		return "Game over!";
 	}
 	else if (bot_tank->get_hp() <= 0) {
-		std::cout << "Victory!" << std::endl;
-		return true;
+		return "Victory!";
 	}
-	else return false;
+
+	return game_finished_msg;
 }
 
 Keys GameEngine::return_key(int k) {

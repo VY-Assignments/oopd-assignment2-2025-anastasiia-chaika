@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <string>
 #include "Direction.h"
 
 class IGameEngine {
@@ -10,7 +11,7 @@ public:
 
 	static std::unique_ptr<IGameEngine> create_game_engine();
 
-	virtual bool isGameOver()=0;
+	virtual std::string isGameOver()=0;
 	virtual const std::vector<std::vector<char>>& get_field() const=0;
 
 	virtual void move_user_tank(Direction direction)=0;
