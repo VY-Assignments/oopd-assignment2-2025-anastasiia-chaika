@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Direction.h"
+#include "Projectile.h"
 
 class IGameEngine {
 public:
@@ -24,5 +25,7 @@ public:
 
 	virtual bool user_is_shot() = 0;
 	virtual bool bot_is_shot() = 0;
+
+	virtual const std::vector<std::unique_ptr<Projectile>>& get_projectiles() const=0;
 
 };

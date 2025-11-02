@@ -30,6 +30,8 @@ public:
 
 	bool user_is_shot() override;
 	bool bot_is_shot() override;
+
+	const std::vector<std::unique_ptr<Projectile>>& get_projectiles() const override;
 private:
 	std::unique_ptr<Field> field;
 	std::unique_ptr<BotTank> bot_tank;
@@ -335,4 +337,8 @@ bool GameEngine::bot_is_shot() {
 		else bot_tank->set_condition(false);
 	}
 	return false;
+}
+
+const std::vector<std::unique_ptr<Projectile>>& GameEngine::get_projectiles() const {
+	return projectiles;
 }

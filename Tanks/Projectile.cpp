@@ -3,7 +3,7 @@
 Projectile::Projectile(Direction direction){
 	d = direction;
 
-	move_interval = std::chrono::milliseconds(200);
+	move_interval = std::chrono::milliseconds(100);
 	last_move_time = std::chrono::steady_clock::now();
 }
 

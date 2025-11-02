@@ -174,9 +174,6 @@ void SFMLRenderer::render() {
 				}
 				sprite.setRotation(90);
 				break;
-			case '*':
-				sprite.setTexture(projectileTexture);
-				break;
 			default:
 				continue;
 			}
@@ -191,6 +188,32 @@ void SFMLRenderer::render() {
 
 			window.draw(sprite);
 		}
+	}
+
+	for (const auto& p : eng->get_projectiles()) {
+		sf::Sprite sprite;
+		sprite.setTexture(projectileTexture);
+
+		switch (p->get_direction()) {
+		case Direction::UP:
+			sprite.setRotation(180);
+			break;
+		case Direction::RIGHT:
+			sprite.setRotation(270);
+			break;
+		case Direction::DOWN:
+			sprite.setRotation(0);
+			break;
+		case Direction::LEFT:
+			sprite.setRotation(90);
+			break;
+		}
+		float scaleX = (float)cellSize / sprite.getTexture()->getSize().x;
+		float scaleY = (float)cellSize / sprite.getTexture()->getSize().y;
+		sprite.setScale(scaleX, scaleY);
+		sprite.setOrigin(sprite.getTexture()->getSize().x / 2.f, sprite.getTexture()->getSize().y / 2.f);
+		sprite.setPosition(p->get_col_pos()* cellSize + cellSize / 2.f, p->get_row_pos()* cellSize + cellSize / 2.f);
+		window.draw(sprite);
 	}
 
 	sf::Text userHP;
