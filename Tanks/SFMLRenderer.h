@@ -14,6 +14,7 @@ private:
 	void render();
 	void render_game_finished(std::string msg);
 	std::unique_ptr<IGameEngine> eng;
+	sf::Sprite draw_cells(char c);
 
 	sf::Texture userTexture;
 	sf::Texture botTexture;

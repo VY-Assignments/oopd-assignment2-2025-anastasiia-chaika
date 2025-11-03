@@ -112,71 +112,11 @@ void SFMLRenderer::render() {
 	for (int i = 0; i < field_grid.size(); i++) {
 		for (int j = 0; j < field_grid[i].size(); j++) {
 			char cellType = field_grid[i][j];
-			sf::Sprite sprite;
-
-			switch (cellType) {
-			case '#':
-				sprite.setTexture(wallTexture);
-				break;
-			case '^':
-				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
-				else {
-					sprite.setTexture(userTexture);
-				}
-				sprite.setRotation(180);
-				break;
-			case '>': 
-				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
-				else {
-					sprite.setTexture(userTexture);
-				}
-				sprite.setRotation(270);
-				break;
-			case 'v': 
-				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
-				else {
-					sprite.setTexture(userTexture);
-				}
-				sprite.setRotation(0);
-				break;
-			case '<':
-				if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
-				else {
-					sprite.setTexture(userTexture);
-				}
-				sprite.setRotation(90);
-				break;
-			case 'B':
-				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
-				else {
-					sprite.setTexture(botTexture);
-				}
-				sprite.setRotation(180);
-				break;
-			case 'D':
-				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
-				else {
-					sprite.setTexture(botTexture);
-				}
-				sprite.setRotation(0);
-				break;
-			case 'b':
-				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
-				else {
-					sprite.setTexture(botTexture);
-				}
-				sprite.setRotation(270);
-				break;
-			case 'd':
-				if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
-				else {
-					sprite.setTexture(botTexture);
-				}
-				sprite.setRotation(90);
-				break;
-			default:
+			sf::Sprite sprite = draw_cells(cellType);
+			if (sprite.getTexture() == nullptr) {
 				continue;
 			}
+
 			float scaleX = (float)cellSize / sprite.getTexture()->getSize().x;
 			float scaleY = (float)cellSize / sprite.getTexture()->getSize().y;
 			sprite.setScale(scaleX, scaleY);
@@ -184,8 +124,6 @@ void SFMLRenderer::render() {
 			sprite.setOrigin(sprite.getTexture()->getSize().x / 2.f, sprite.getTexture()->getSize().y / 2.f);
 
 			sprite.setPosition(j * cellSize + cellSize / 2.f, i * cellSize + cellSize / 2.f);
-
-
 			window.draw(sprite);
 		}
 	}
@@ -233,4 +171,72 @@ void SFMLRenderer::render() {
 	window.draw(botHP);
 
 	window.display();
+}
+
+sf::Sprite SFMLRenderer::draw_cells(char cellType) {
+	sf::Sprite sprite;
+	switch (cellType) {
+	case '#':
+		sprite.setTexture(wallTexture);
+		break;
+	case '^':
+		if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+		else {
+			sprite.setTexture(userTexture);
+		}
+		sprite.setRotation(180);
+		break;
+	case '>':
+		if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+		else {
+			sprite.setTexture(userTexture);
+		}
+		sprite.setRotation(270);
+		break;
+	case 'v':
+		if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+		else {
+			sprite.setTexture(userTexture);
+		}
+		sprite.setRotation(0);
+		break;
+	case '<':
+		if (eng->user_is_shot()) sprite.setTexture(userShotTexture);
+		else {
+			sprite.setTexture(userTexture);
+		}
+		sprite.setRotation(90);
+		break;
+	case 'B':
+		if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+		else {
+			sprite.setTexture(botTexture);
+		}
+		sprite.setRotation(180);
+		break;
+	case 'D':
+		if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+		else {
+			sprite.setTexture(botTexture);
+		}
+		sprite.setRotation(0);
+		break;
+	case 'b':
+		if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+		else {
+			sprite.setTexture(botTexture);
+		}
+		sprite.setRotation(270);
+		break;
+	case 'd':
+		if (eng->bot_is_shot()) sprite.setTexture(botShotTexture);
+		else {
+			sprite.setTexture(botTexture);
+		}
+		sprite.setRotation(90);
+		break;
+	default:
+		break;
+	}
+	return sprite;
 }
