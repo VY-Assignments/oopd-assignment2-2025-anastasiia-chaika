@@ -4,6 +4,9 @@
 #include <windows.h>
 #include <memory>
 
+
+//method delete bot tank, delete all dependencies
+
 int main() {
 
 #ifdef SFML_RENDER
