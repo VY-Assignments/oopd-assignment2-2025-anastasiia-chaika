@@ -130,7 +130,7 @@ std::unique_ptr<IGameEngine> IGameEngine::create_game_engine() {
 
 void GameEngine::display_field() const {
 	system("cls");
-	field->display_field();
+	field->display_field(bot_tanks);
 }
 
 void GameEngine::move_bot_tank(int index) {
@@ -206,6 +206,7 @@ void GameEngine::user_shoot() {
 }
 
 bool GameEngine::bot_shoot() {
+	bool anyShot = false;
 	for (int index = 0;index < bot_tanks.size();index++) {
 		Direction direcction = bot_tanks[index]->get_direction();
 		int user_r = user_tank->get_row_pos();
@@ -220,33 +221,33 @@ bool GameEngine::bot_shoot() {
 				std::unique_ptr<Projectile> pr = bot_tanks[index]->bot_shoot();
 				if (pr) projectiles.push_back(std::move(pr));
 			}
-			return true;
+			anyShot = true;
 			break;
 		case DOWN:
 			if (user_r > bot_r && user_c == bot_c) {
 				std::unique_ptr<Projectile> pr = bot_tanks[index]->bot_shoot();
 				if (pr) projectiles.push_back(std::move(pr));
 			}
-			return true;
+			anyShot = true;
 			break;
 		case LEFT:
 			if (user_c < bot_c && user_r == bot_r) {
 				std::unique_ptr<Projectile> pr = bot_tanks[index]->bot_shoot();
 				if (pr) projectiles.push_back(std::move(pr));
 			}
-			return true;
+			anyShot = true;
 			break;
 		case RIGHT:
 			if (user_c > bot_c && user_r == bot_r) {
 				std::unique_ptr<Projectile> pr = bot_tanks[index]->bot_shoot();
 				if (pr) projectiles.push_back(std::move(pr));
 			}
-			return true;
+			anyShot = true;
 			break;
 		}
 	}
 
-	return false;
+	return anyShot;
 }
 
 void GameEngine::update_field() {
@@ -356,8 +357,8 @@ Direction GameEngine::get_bot_direction(int index) {
 
 bool GameEngine::user_is_shot() {
 	if (user_tank->get_is_shoot()) {
-		auto now = std::chrono::steady_clock::now();
-		auto duration = std::chrono::duration_cast<std::chrono::seconds>(now - user_tank->shoot_time).count();
+		std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
+		long long duration = std::chrono::duration_cast<std::chrono::seconds>(now - user_tank->shoot_time).count();
 
 		if (duration < 1) return true;
 		else user_tank->set_condition(false);

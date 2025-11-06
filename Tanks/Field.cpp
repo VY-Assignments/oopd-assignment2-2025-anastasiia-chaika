@@ -14,23 +14,6 @@ Field::Field() {
 	init_field();
 }
 
-
-//int Field::get_bot_row(int index) const {
-//	return bot_row;
-//}
-//
-//int Field::get_bot_col(int index) const {
-//	return bot_col;
-//}
-//
-//int Field::get_us_row() const {
-//	return us_row;
-//}
-//
-//int Field::get_us_col() const {
-//	return us_col;
-//}
-
 void Field::set_us_row(int new_row) {
 	us_row = new_row;
 }
@@ -48,8 +31,6 @@ void Field::init_field() {
 
 	int totalCells = rows * cols;
 	int number_of_obstacles = static_cast<int>(coeficient * totalCells);
-
-	//field_grid[bot_row][bot_col] = CellType::BOTTANK;
 
 	field_grid[us_row][us_col] = CellType::USERTANK;
 
@@ -70,11 +51,11 @@ void Field::init_field() {
 	}
 }
 
-void Field::display_field() const {
+void Field::display_field(const std::vector<std::unique_ptr<BotTank>>& bot_tanks) const {
 	std::cout << "User HP: " << user_hp << std::endl;
-	//for (int i = 0;i < bots_hp.size();i++) {
-	//	std::cout << "Bot  HP: " << bots_hp[i] << std::endl;
-	//}
+	for (int i = 0;i < bot_tanks.size();i++) {
+		std::cout << "Bot  HP: " << bot_tanks[i] << std::endl;
+	}
 
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {

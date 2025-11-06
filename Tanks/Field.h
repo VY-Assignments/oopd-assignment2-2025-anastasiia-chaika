@@ -9,13 +9,10 @@
 class Field {
 public:
 	Field();
-	void display_field() const;
+	void display_field(const std::vector<std::unique_ptr<BotTank>>& bot_tanks) const;
 	void init_field();
 	void update_field(const std::vector<std::unique_ptr<Projectile>>& projectiles, const std::vector<std::unique_ptr<BotTank>>& bot_tanks);
 	const std::vector<std::vector<CellType>>& get_field() const;
-
-	//int get_us_row() const;
-	//int get_us_col() const;
 
 	void set_us_row(int new_row);
 	void set_us_col(int new_col);

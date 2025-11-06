@@ -43,7 +43,7 @@ SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> engine) {
 }
 
 void SFMLRenderer::mainLoop() {
-	render_game_start();
+	//render_game_start();
 	while (window.isOpen()) {
 		eng->update_field();
 		render();
@@ -125,29 +125,29 @@ void SFMLRenderer::render_game_finished(GameFinished status) {
 }
 
 void SFMLRenderer::render_game_start() {
-	while (window.isOpen()) {
-		window.clear();
-		window.draw(backgrSprite);
+	//while (window.isOpen()) {
+	//	window.clear();
+	//	window.draw(backgrSprite);
 
-		sf::Text msg;
-		msg.setFont(font);
-		msg.setCharacterSize(50);
-		msg.setFillColor(sf::Color::White);
-		msg.setString("Choose game mode: ");
-		msg.setPosition(100, 100);
+	//	sf::Text msg;
+	//	msg.setFont(font);
+	//	msg.setCharacterSize(50);
+	//	msg.setFillColor(sf::Color::White);
+	//	msg.setString("Choose game mode: ");
+	//	msg.setPosition(100, 100);
 
-		window.draw(buttonEasyS);
-		window.display();
-		
-		sf::Event event;
-		while (window.pollEvent(event)) {
+	//	window.draw(buttonEasyS);
+	//	window.display();
+	//	
+	//	sf::Event event;
+	//	while (window.pollEvent(event)) {
 
-			if (event.type == sf::Event::Closed) {
-				window.close();
-				break;
-			}
-		}
-	}
+	//		if (event.type == sf::Event::Closed) {
+	//			window.close();
+	//			break;
+	//		}
+	//	}
+	//}
 }
 
 void SFMLRenderer::render() {
@@ -201,13 +201,13 @@ void SFMLRenderer::render() {
 		window.draw(sprite);
 	}
 
-	for (const std::unique_ptr<BotTank>& bot : eng->get_bot_tanks()) {
+	for (int i = 0;i< eng->get_bot_tanks().size(); i++) {
 		sf::Sprite sprite;
 
-		if (bot->get_is_shoot()) sprite.setTexture(botShotTexture);
+		if (eng->bot_is_shot(i)) sprite.setTexture(botShotTexture);
 		else sprite.setTexture(botTexture);
 
-		Direction d = bot->get_direction();
+		Direction d = eng->get_bot_tanks()[i]->get_direction();
 		switch (d) {
 		case Direction::UP:
 			sprite.setRotation(180);
@@ -227,7 +227,7 @@ void SFMLRenderer::render() {
 		float scaleY = (float)cellSize / sprite.getTexture()->getSize().y;
 		sprite.setScale(scaleX, scaleY);
 		sprite.setOrigin(sprite.getTexture()->getSize().x / 2.f, sprite.getTexture()->getSize().y / 2.f);
-		sprite.setPosition(bot->get_col_pos() * cellSize + cellSize / 2.f, bot->get_row_pos() * cellSize + cellSize / 2.f);
+		sprite.setPosition(eng->get_bot_tanks()[i]->get_col_pos() * cellSize + cellSize / 2.f, eng->get_bot_tanks()[i]->get_row_pos() * cellSize + cellSize / 2.f);
 
 		window.draw(sprite);
 	}
@@ -246,11 +246,11 @@ void SFMLRenderer::render() {
 		botHP.setCharacterSize(25);
 		botHP.setFillColor(sf::Color::White);
 		botHP.setString("Bot HP: " + std::to_string(eng->get_bot_hp(i)));
-		botHP.setPosition(650, 5);
+		botHP.setPosition(650, 5 + i*25);
 		window.draw(botHP);
-
-		window.display();
 	}
+
+	window.display();	
 }
 
 sf::Sprite SFMLRenderer::draw_cells(CellType cellType) {
