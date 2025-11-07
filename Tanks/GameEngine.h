@@ -12,7 +12,7 @@
 class IGameEngine {
 public:
 	virtual ~IGameEngine() = default;
-	/*virtual void render() =0;*/
+	virtual void render() =0;
 
 	static std::unique_ptr<IGameEngine> create_game_engine();
 

@@ -29,7 +29,7 @@ private:
 
 	int user_hp = 100;
 
-	double coeficient = 0.03;
+	double coeficient = 0.05;
 	std::vector<std::vector<CellType>> field_grid;
 	void clear_objects_positions();
 };

@@ -18,7 +18,7 @@
 class GameEngine : public IGameEngine {
 public:
 	GameEngine();
-	/*void render() override;*/
+	void render() override;
 
 	GameFinished isGameOver() override;
 	const std::vector<std::vector<CellType>>& get_field() const;
@@ -42,6 +42,7 @@ public:
 	const std::vector<std::unique_ptr<BotTank>>& get_bot_tanks() const override;
 	void start_game(GameMode m) override;
 	void restart() override;
+	void render_main_loop();
 private:
 	std::unique_ptr<Field> field;
 	std::vector<std::unique_ptr<BotTank>> bot_tanks;
@@ -88,60 +89,95 @@ std::unique_ptr<IGameEngine> IGameEngine::create_game_engine() {
 	return std::make_unique<GameEngine>();
 }
 
-//void GameEngine::render() {
-//	display_field();
-//	while (true) {
-//
-//		update_field();
-//		display_field();
-//		bot_shoot();		//int index
-//
-//		if (isGameOver() == GameFinished::USERLOST) {
-//			std::cout << "Game over!" << std::endl;
-//			return;
-//		}
-//		else if (isGameOver() == GameFinished::USERWON) {
-//			std::cout << "Victory!" << std::endl;
-//			return;
-//		}
-//
-//		else if (_kbhit()) {
-//			int key_num = _getch();
-//			int key = return_key(key_num);
-//
-//			if (key == Keys::ESC) {
-//				break;
-//			}
-//
-//			else if (key == Keys::ARROW) {
-//				int key_dir_num = _getch();
-//				int key_direction = return_key(key_dir_num);
-//				Direction d = Direction::NODIRECTION;
-//				switch (key_direction) {
-//				case Keys::AR_UP:
-//					d = Direction::UP;
-//					break;
-//				case Keys::AR_DOWN:
-//					d = Direction::DOWN;
-//					break;
-//				case Keys::AR_LEFT:
-//					d = Direction::LEFT;
-//					break;
-//				case Keys::AR_RIGHT:
-//					d = Direction::RIGHT;
-//					break;
-//				}
-//				if (d != Direction::NODIRECTION) {
-//					move_user_tank(d);
-//				}
-//			}
-//
-//			else if (key == Keys::SPACE) {
-//				user_shoot();
-//			}
-//		}
-//	}
-//}
+void GameEngine::render_main_loop() {
+
+}
+
+void GameEngine::render() {
+	int globalChoice = 0;
+	while (true) {
+		int m = 0;
+		do {
+			std::cout << "Enter 1 for easy mode, 2 - for hard: ";
+			std::cin >> m;
+		} while (m != 1 && m != 2);
+
+		if (m == 1) mode = GameMode::EASY;
+		else mode = GameMode::HARD;
+
+		restart();
+		start_game(mode);
+
+		while (true) {
+			display_field();
+			update_field();
+			bot_shoot();
+			display_field();
+
+			GameFinished status = isGameOver();
+			if (status != GameFinished::INPROGRESS) {
+				if (status == GameFinished::USERLOST) {
+					std::cout << "Game over!" << std::endl;
+				}
+				else {
+					std::cout << "Victory!" << std::endl;
+				}
+				int choice = 0;
+				do {
+					std::cout << "Want to restart? Enter 1 - restart, 2 - exit: ";
+					std::cin >> choice;
+				} while (choice != 1 && choice != 2);
+
+				if (choice == 1) {
+					break;
+				}
+				else {
+					return;
+				}
+			}
+			else if (_kbhit()) {
+				int key_num = _getch();
+				int key = return_key(key_num);
+
+				if (key == Keys::ESC) {
+					break;
+				}
+
+				else if (key == Keys::ARROW) {
+					int key_dir_num = _getch();
+					int key_direction = return_key(key_dir_num);
+					Direction d = Direction::NODIRECTION;
+					switch (key_direction) {
+					case Keys::AR_UP:
+						d = Direction::UP;
+						break;
+					case Keys::AR_DOWN:
+						d = Direction::DOWN;
+						break;
+					case Keys::AR_LEFT:
+						d = Direction::LEFT;
+						break;
+					case Keys::AR_RIGHT:
+						d = Direction::RIGHT;
+						break;
+					}
+					if (d != Direction::NODIRECTION) {
+						move_user_tank(d);
+					}
+				}
+
+				else if (key == Keys::SPACE) {
+					user_shoot();
+				}
+			}
+
+		}
+	}
+
+
+
+	
+}
 
 void GameEngine::display_field() const {
 	system("cls");
@@ -407,12 +443,9 @@ const std::vector<std::unique_ptr<BotTank>>& GameEngine::get_bot_tanks() const {
 void GameEngine::restart() {
 	field.reset();
 	user_tank.reset();
-	for (int i = 0; i < projectiles.size();i++) {
-		projectiles.erase(projectiles.begin() + i);
-	}
-	for (int i = 0; i < bot_tanks.size();i++) {
-		projectiles.erase(projectiles.begin() + i);
-	}
+
+	projectiles.clear();
+	bot_tanks.clear();
 
 	field = std::make_unique<Field>();
 	user_tank = std::make_unique<UserTank>();

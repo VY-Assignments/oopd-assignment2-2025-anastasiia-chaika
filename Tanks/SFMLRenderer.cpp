@@ -156,6 +156,7 @@ void SFMLRenderer::render_game_finished(GameFinished status) {
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 				sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
 				if (buttonRestartS.getGlobalBounds().contains(mousePosF)) {
+					eng->restart();
 					mainLoop();
 				}
 				else if (buttonExitS.getGlobalBounds().contains(mousePosF)) {

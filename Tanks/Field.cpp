@@ -54,12 +54,28 @@ void Field::init_field() {
 void Field::display_field(const std::vector<std::unique_ptr<BotTank>>& bot_tanks) const {
 	std::cout << "User HP: " << user_hp << std::endl;
 	for (int i = 0;i < bot_tanks.size();i++) {
-		std::cout << "Bot  HP: " << bot_tanks[i] << std::endl;
+		std::cout << "Bot  HP: " << bot_tanks[i]->get_hp() << std::endl;
 	}
 
 	for (int i = 0;i < rows;i++) {
 		for (int j = 0;j < cols;j++) {
-			std::cout << field_grid[i][j];
+			CellType c = field_grid[i][j];
+			switch (c) {
+			case CellType::WALL:
+				std::cout << '#';
+				break;
+			case CellType::PROJECTILE:
+				std::cout << '*';
+				break;
+			case CellType::BOTTANK:
+				std::cout << 'B';
+				break;
+			case CellType::USERTANK:
+				std::cout << 'U';
+				break;
+			case CellType::EMPTY:
+				std::cout << ' ';
+			}
 		}
 		std::cout << '\n';
 	}
