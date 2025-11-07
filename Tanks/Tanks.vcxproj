@@ -191,10 +191,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BotTank.h" />
+    <ClInclude Include="CellType.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="GameEngine.h" />
-    <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="GameFinished.h" />
+    <ClInclude Include="GameMode.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Projectile.h" />

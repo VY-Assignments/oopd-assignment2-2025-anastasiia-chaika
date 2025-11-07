@@ -8,6 +8,7 @@
 class BotTank : public Tank{
 public:
 	BotTank();
+	BotTank(int row, int col);
 	void move() override;
 	std::unique_ptr<Projectile> bot_shoot();
 private:
