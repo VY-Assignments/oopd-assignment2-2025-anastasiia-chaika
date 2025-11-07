@@ -37,5 +37,6 @@ public:
 	virtual const std::vector<std::unique_ptr<BotTank>>& get_bot_tanks() const = 0;
 
 	virtual void start_game(GameMode m)=0;
+	virtual void restart() = 0;
 
 };

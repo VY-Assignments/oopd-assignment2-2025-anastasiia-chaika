@@ -31,10 +31,15 @@ private:
 	sf::Sprite buttonEasyS;
 	sf::Texture buttonHardT;
 	sf::Sprite buttonHardS;
+	sf::Texture buttonRestartT;
+	sf::Sprite buttonRestartS;
+	sf::Texture buttonExitT;
+	sf::Sprite buttonExitS;
 
 	int cellSize;
 	int rows;
 	int cols;
 
 	sf::Font font;
+	bool game_finished = true;
 };

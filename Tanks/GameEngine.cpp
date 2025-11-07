@@ -41,6 +41,7 @@ public:
 
 	const std::vector<std::unique_ptr<BotTank>>& get_bot_tanks() const override;
 	void start_game(GameMode m) override;
+	void restart() override;
 private:
 	std::unique_ptr<Field> field;
 	std::vector<std::unique_ptr<BotTank>> bot_tanks;
@@ -401,4 +402,18 @@ const std::vector<std::unique_ptr<Projectile>>& GameEngine::get_projectiles() co
 
 const std::vector<std::unique_ptr<BotTank>>& GameEngine::get_bot_tanks() const {
 	return bot_tanks;
+}
+
+void GameEngine::restart() {
+	field.reset();
+	user_tank.reset();
+	for (int i = 0; i < projectiles.size();i++) {
+		projectiles.erase(projectiles.begin() + i);
+	}
+	for (int i = 0; i < bot_tanks.size();i++) {
+		projectiles.erase(projectiles.begin() + i);
+	}
+
+	field = std::make_unique<Field>();
+	user_tank = std::make_unique<UserTank>();
 }

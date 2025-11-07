@@ -30,8 +30,14 @@ SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> e) {
 	buttonEasyT.loadFromFile("img/easy.png");
 	buttonHardT.loadFromFile("img/hard.png");
 
+	buttonRestartT.loadFromFile("img/restart.png");
+	buttonExitT.loadFromFile("img/exit.png");
+
 	buttonEasyS.setTexture(buttonEasyT);
 	buttonHardS.setTexture(buttonHardT);
+
+	buttonRestartS.setTexture(buttonRestartT);
+	buttonExitS.setTexture(buttonExitT);
 
 	float scaleX = (cols * cellSize) / (float)backgrTexture.getSize().x;
 	float scaleY = (rows * cellSize) / (float)backgrTexture.getSize().y;
@@ -44,6 +50,7 @@ void SFMLRenderer::mainLoop() {
 	GameMode mode = render_game_start();
 	eng = IGameEngine::create_game_engine();
 	eng->start_game(mode);
+	game_finished = false;
 	while (window.isOpen()) {
 		eng->update_field();
 		render();
@@ -105,20 +112,57 @@ void SFMLRenderer::render_game_finished(GameFinished status) {
 			msg.setString("Victory!");
 		}
 
+
 		sf::FloatRect textBounds = msg.getLocalBounds();
 		float posX = (cols * cellSize) / 2.0f - textBounds.width / 2.0f;
 		float posY = (rows * cellSize) / 2.0f - textBounds.height / 2.0f;
 		msg.setPosition(posX, posY);
 
+		float windowWidth = cols * cellSize;
+		float windowHeight = rows * cellSize;
+
+		float buttonWidth = windowWidth * 0.45f;
+		float buttonHeight = windowHeight * 0.15f;
+
+		float scaleX = buttonWidth / buttonRestartS.getTexture()->getSize().x;
+		float scaleY = buttonHeight / buttonExitS.getTexture()->getSize().y;
+
+		buttonRestartS.setScale(scaleX, scaleY);
+		buttonExitS.setScale(scaleX, scaleY);
+
+		float centerX = (windowWidth - buttonWidth) / 2.f;
+		float spacing = 60.f;
+		float centerY = (windowHeight - (2 * buttonHeight + spacing)) / 2.f;
+
+		buttonRestartS.setPosition(centerX, centerY);
+		buttonExitS.setPosition(centerX, centerY + buttonHeight + spacing);
+
+		msg.setPosition((windowWidth - msg.getGlobalBounds().width) / 2.f, 100);
+
+		window.draw(buttonRestartS);
+		window.draw(buttonExitS);
 		window.draw(msg);
 		window.display();
 
 		sf::Event event;
 		while (window.pollEvent(event)) {
 
-			if (event.type == sf::Event::Closed) {
+			switch (event.type) {
+			case sf::Event::Closed:
 				window.close();
 				break;
+
+			case sf::Event::MouseButtonPressed: {
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+				if (buttonRestartS.getGlobalBounds().contains(mousePosF)) {
+					mainLoop();
+				}
+				else if (buttonExitS.getGlobalBounds().contains(mousePosF)) {
+					window.close();
+				}
+				break;
+			}
 			}
 		}
 	}
@@ -144,16 +188,16 @@ GameMode SFMLRenderer::render_game_start() {
 	buttonEasyS.setPosition(centerX, centerY);
 	buttonHardS.setPosition(centerX, centerY + buttonHeight + spacing);
 
+	sf::Text msg;
+	msg.setFont(font);
+	msg.setCharacterSize(50);
+	msg.setFillColor(sf::Color::White);
+	msg.setString("Choose game mode: ");
+	msg.setPosition((windowWidth - msg.getGlobalBounds().width) / 2.f, 100);
+
 	while (window.isOpen()) {
 		window.clear();
 		window.draw(backgrSprite);
-
-		sf::Text msg;
-		msg.setFont(font);
-		msg.setCharacterSize(50);
-		msg.setFillColor(sf::Color::White);
-		msg.setString("Choose game mode: ");
-		msg.setPosition((windowWidth -msg.getGlobalBounds().width) / 2.f, 100);
 
 		window.draw(msg);
 		window.draw(buttonEasyS);
@@ -167,17 +211,6 @@ GameMode SFMLRenderer::render_game_start() {
 			case sf::Event::Closed:
 				window.close();
 				break;
-			case sf::Event::MouseMoved: {
-				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-				sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
-				if (buttonEasyS.getGlobalBounds().contains(mousePosF)) {
-					buttonEasyS.setColor(sf::Color(250, 20, 20));
-				}
-				else if (buttonHardS.getGlobalBounds().contains(mousePosF)) {
-					buttonHardS.setColor(sf::Color(250, 20, 20));
-				}
-				break;
-			}
 
 			case sf::Event::MouseButtonPressed: {
 					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
