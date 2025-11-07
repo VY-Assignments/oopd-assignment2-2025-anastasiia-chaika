@@ -6,7 +6,6 @@
 
 
 //method delete bot tank, delete all dependencies
-//tanks dont change picture to normal
 
 int main() {
 

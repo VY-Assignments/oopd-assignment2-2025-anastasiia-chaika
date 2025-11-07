@@ -4,12 +4,15 @@
 #include "GameFinished.h"
 #include "BotTank.h"
 #include "CellType.h"
+#include "GameMode.h"
 
-SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> engine) {
-	eng = std::move(engine);
+#include <iostream>
 
-	rows = eng->get_field().size();
-	cols = eng->get_field()[0].size();
+SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> e) {
+	eng = std::move(e);
+
+	rows = 20;
+	cols = 20;
 	cellSize = 40;
 
 	window.create(sf::VideoMode(cols*cellSize, rows*cellSize), "Tanks");
@@ -34,16 +37,13 @@ SFMLRenderer::SFMLRenderer(std::unique_ptr<IGameEngine> engine) {
 	float scaleY = (rows * cellSize) / (float)backgrTexture.getSize().y;
 	backgrSprite.setScale(scaleX, scaleY);
 
-	buttonEasyS.setPosition(300, 100);
-	buttonHardS.setPosition(500, 100);
-	buttonEasyS.setScale(0.5f, 0.5f);
-	buttonHardS.setScale(0.5f, 0.5f);
-
 	font.loadFromFile("C:\\Windows\\Fonts\\arial.ttf");
 }
 
 void SFMLRenderer::mainLoop() {
-	//render_game_start();
+	GameMode mode = render_game_start();
+	eng = IGameEngine::create_game_engine();
+	eng->start_game(mode);
 	while (window.isOpen()) {
 		eng->update_field();
 		render();
@@ -124,30 +124,75 @@ void SFMLRenderer::render_game_finished(GameFinished status) {
 	}
 }
 
-void SFMLRenderer::render_game_start() {
-	//while (window.isOpen()) {
-	//	window.clear();
-	//	window.draw(backgrSprite);
+GameMode SFMLRenderer::render_game_start() {
+	float windowWidth = cols * cellSize;
+	float windowHeight = rows * cellSize;
 
-	//	sf::Text msg;
-	//	msg.setFont(font);
-	//	msg.setCharacterSize(50);
-	//	msg.setFillColor(sf::Color::White);
-	//	msg.setString("Choose game mode: ");
-	//	msg.setPosition(100, 100);
+	float buttonWidth = windowWidth * 0.45f;
+	float buttonHeight = windowHeight * 0.15f;
 
-	//	window.draw(buttonEasyS);
-	//	window.display();
-	//	
-	//	sf::Event event;
-	//	while (window.pollEvent(event)) {
+	float scaleX = buttonWidth / buttonEasyS.getTexture()->getSize().x;
+	float scaleY = buttonHeight / buttonEasyS.getTexture()->getSize().y;
 
-	//		if (event.type == sf::Event::Closed) {
-	//			window.close();
-	//			break;
-	//		}
-	//	}
-	//}
+	buttonEasyS.setScale(scaleX, scaleY);
+	buttonHardS.setScale(scaleX, scaleY);
+
+	float centerX = (windowWidth - buttonWidth) / 2.f;
+	float spacing = 60.f;
+	float centerY = (windowHeight - (2 * buttonHeight + spacing)) / 2.f;
+
+	buttonEasyS.setPosition(centerX, centerY);
+	buttonHardS.setPosition(centerX, centerY + buttonHeight + spacing);
+
+	while (window.isOpen()) {
+		window.clear();
+		window.draw(backgrSprite);
+
+		sf::Text msg;
+		msg.setFont(font);
+		msg.setCharacterSize(50);
+		msg.setFillColor(sf::Color::White);
+		msg.setString("Choose game mode: ");
+		msg.setPosition((windowWidth -msg.getGlobalBounds().width) / 2.f, 100);
+
+		window.draw(msg);
+		window.draw(buttonEasyS);
+		window.draw(buttonHardS);
+
+		window.display();
+		
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			switch (event.type) {
+			case sf::Event::Closed:
+				window.close();
+				break;
+			case sf::Event::MouseMoved: {
+				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+				if (buttonEasyS.getGlobalBounds().contains(mousePosF)) {
+					buttonEasyS.setColor(sf::Color(250, 20, 20));
+				}
+				else if (buttonHardS.getGlobalBounds().contains(mousePosF)) {
+					buttonHardS.setColor(sf::Color(250, 20, 20));
+				}
+				break;
+			}
+
+			case sf::Event::MouseButtonPressed: {
+					sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+					sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+					if (buttonEasyS.getGlobalBounds().contains(mousePosF)) {
+						return GameMode::EASY;
+					}
+					else if (buttonHardS.getGlobalBounds().contains(mousePosF)) {
+						return GameMode::HARD;
+					}
+					break;
+				}
+			}
+		}
+	}
 }
 
 void SFMLRenderer::render() {

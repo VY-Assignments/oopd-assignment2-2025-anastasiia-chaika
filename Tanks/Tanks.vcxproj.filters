@@ -71,9 +71,6 @@
     <ClInclude Include="Keys.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SFMLRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>

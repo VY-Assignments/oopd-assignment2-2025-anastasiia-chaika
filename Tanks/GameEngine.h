@@ -31,11 +31,11 @@ public:
 	virtual bool bot_is_shot(int index) = 0;
 
 	virtual const std::vector<std::unique_ptr<Projectile>>& get_projectiles() const=0;
-
-	virtual void set_mode(GameMode mode)=0;
 	virtual Direction get_user_direction() = 0;
 	virtual Direction get_bot_direction(int index) = 0;
 
 	virtual const std::vector<std::unique_ptr<BotTank>>& get_bot_tanks() const = 0;
+
+	virtual void start_game(GameMode m)=0;
 
 };

@@ -1,23 +1,23 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "IRenderer.h"
 #include "GameEngine.h"
 #include "BotTank.h"
 #include "CellType.h"
+#include "GameMode.h"
 #include <memory>
 #include <string>
 
-class SFMLRenderer : public IRenderer{
+class SFMLRenderer {
 public:
 	SFMLRenderer(std::unique_ptr<IGameEngine> engine);
-	void mainLoop() override;
+	void mainLoop();
 private:
 	sf::RenderWindow window;
 	void render();
 	void render_game_finished(GameFinished status);
-	void render_game_start();
-	std::unique_ptr<IGameEngine> eng;
-	sf::Sprite draw_cells(CellType c);;
+	GameMode render_game_start();
+	std::unique_ptr<IGameEngine> eng = nullptr;
+	sf::Sprite draw_cells(CellType c);
 
 	sf::Texture userTexture;
 	sf::Texture botTexture;

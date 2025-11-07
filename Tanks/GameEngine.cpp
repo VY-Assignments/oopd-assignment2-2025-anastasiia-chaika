@@ -36,11 +36,11 @@ public:
 
 	const std::vector<std::unique_ptr<Projectile>>& get_projectiles() const override;
 
-	void set_mode(GameMode m) override;
 	Direction get_user_direction() override;
 	Direction get_bot_direction(int index) override;
 
 	const std::vector<std::unique_ptr<BotTank>>& get_bot_tanks() const override;
+	void start_game(GameMode m) override;
 private:
 	std::unique_ptr<Field> field;
 	std::vector<std::unique_ptr<BotTank>> bot_tanks;
@@ -54,19 +54,33 @@ private:
 
 	Keys return_key(int k);
 
-	GameMode mode = GameMode::HARD;
+	GameMode mode;
 };
+
+void GameEngine::start_game(GameMode m) {
+	mode = m;
+	if (mode == GameMode::EASY) {
+		bot_tanks.push_back(std::make_unique<BotTank>());
+	}
+	else {
+		std::unique_ptr<BotTank> t1 = std::make_unique<BotTank>(2, 2);
+		t1->set_direction(Direction::DOWN);
+		bot_tanks.push_back(std::move(t1));
+
+		std::unique_ptr<BotTank> t2 = std::make_unique<BotTank>(17, 1);
+		t2->set_direction(Direction::LEFT);
+		bot_tanks.push_back(std::move(t2));
+
+		std::unique_ptr<BotTank> t3 = std::make_unique<BotTank>(1, 16);
+		t3->set_direction(Direction::LEFT);
+		bot_tanks.push_back(std::move(t3));
+
+	}
+}
 
 GameEngine::GameEngine() {
 	field = std::make_unique<Field>();
 	user_tank = std::make_unique<UserTank>();
-	if (mode == GameMode::EASY) {
-		bot_tanks.emplace_back(std::make_unique<BotTank>());
-	}
-	else {
-		bot_tanks.emplace_back(std::make_unique<BotTank>(1, 1));
-		bot_tanks.emplace_back(std::make_unique<BotTank>(1, 18));
-	}
 }
 
 std::unique_ptr<IGameEngine> IGameEngine::create_game_engine() {
@@ -143,25 +157,25 @@ void GameEngine::move_bot_tank(int index) {
 			if (!field->cell_is_free(row - 1, col)) {
 				bot_tanks[index]->set_direction(LEFT);
 			}
-			bot_tanks[index]->move();
+			else bot_tanks[index]->move();
 			break;
 		case DOWN:
 			if (!field->cell_is_free(row + 1, col)) {
 				bot_tanks[index]->set_direction(RIGHT);
 			}
-			bot_tanks[index]->move();
+			else bot_tanks[index]->move();
 			break;
 		case LEFT:
 			if (!field->cell_is_free(row, col - 1)) {
 				bot_tanks[index]->set_direction(DOWN);
 			}
-			bot_tanks[index]->move();
+			else bot_tanks[index]->move();
 			break;
 		case RIGHT:
 			if (!field->cell_is_free(row, col + 1)) {
 				bot_tanks[index]->set_direction(UP);
 			}
-			bot_tanks[index]->move();
+			else bot_tanks[index]->move();
 			break;
 		}
 	}
@@ -251,6 +265,7 @@ bool GameEngine::bot_shoot() {
 }
 
 void GameEngine::update_field() {
+	field->update_field(projectiles, bot_tanks);
 	for (const auto& p : projectiles) {
 		p->move();
 	}
@@ -271,12 +286,11 @@ void GameEngine::clear_unneeded_projectiles() {
 		int c = projectiles[i]->get_col_pos();
 
 		bool hit = false;
-		for (int i = 0;i < bot_tanks.size();i++) {
-			bool hit = false;
-			if (bot_tanks[i]->get_row_pos() == r && bot_tanks[i]->get_col_pos() == c) {
-				bot_tanks[i]->lower_hp();
-				bot_tanks[i]->set_condition(true);
-				bot_tanks[i]->shoot_time = std::chrono::steady_clock::now();
+		for (int j = 0;j < bot_tanks.size();j++) {
+			if (bot_tanks[j]->get_row_pos() == r && bot_tanks[j]->get_col_pos() == c) {
+				bot_tanks[j]->lower_hp();
+				bot_tanks[j]->set_condition(true);
+				bot_tanks[j]->shoot_time = std::chrono::steady_clock::now();
 				hit = true;
 			}
 
@@ -302,12 +316,16 @@ GameFinished GameEngine::isGameOver() {
 		return GameFinished::USERLOST;
 	}
 	else {
-		for (int i = 0;i < bot_tanks.size();i++) {
+		for (int i = 0;i < bot_tanks.size();) {
+
 			if (bot_tanks[i]->get_hp() <= 0) {
 				if (bot_tanks.size() > 1) {
 					bot_tanks.erase(bot_tanks.begin() + i);
 				}
 				else return GameFinished::USERWON;
+			}
+			else {
+				i++;
 			}
 		}
 	}
@@ -379,10 +397,6 @@ bool GameEngine::bot_is_shot(int index) {
 
 const std::vector<std::unique_ptr<Projectile>>& GameEngine::get_projectiles() const {
 	return projectiles;
-}
-
-void GameEngine::set_mode(GameMode m) {
-	mode = m;
 }
 
 const std::vector<std::unique_ptr<BotTank>>& GameEngine::get_bot_tanks() const {

@@ -197,7 +197,6 @@
     <ClInclude Include="GameEngine.h" />
     <ClInclude Include="GameFinished.h" />
     <ClInclude Include="GameMode.h" />
-    <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Projectile.h" />

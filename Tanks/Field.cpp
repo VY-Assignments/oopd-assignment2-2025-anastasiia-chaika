@@ -44,7 +44,7 @@ void Field::init_field() {
 		int r = dist_rows(rng);
 		int c = dist_cols(rng);
 
-		if (!field_grid[r][c]) {
+		if (field_grid[r][c] == CellType::EMPTY) {
 			field_grid[r][c] = CellType::WALL;
 		}
 		placed++;
